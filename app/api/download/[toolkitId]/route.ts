@@ -1,76 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
+import { toolkitItems } from "@/data/toolkit-data";
 
-type ToolkitFile = {
-  filename: string;
-  contentType: string;
-  content: string;
-};
+function getContentType(fileType: string): string {
+    if (fileType.includes("CSV")) {
+        return "text/csv";
+    }
+    if (fileType.includes("PDF")) {
+        return "application/pdf";
+    }
+    if (fileType.includes("Excel")) {
+        return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    }
+    return "text/plain";
+}
 
-const toolkitFiles: Record<string, ToolkitFile> = {
-  "business-budget-template": {
-    filename: "Business-Budget-Template.xlsx",
-    contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    content: "Excel template content would be here"
-  },
-  "cash-flow-tracker": {
-    filename: "Cash-Flow-Tracker.xlsx",
-    contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    content: "Cash flow tracker content would be here"
-  },
-  "tax-calendar": {
-    filename: "Tax-Calendar-2024-25.pdf",
-    contentType: "application/pdf",
-    content: "Tax calendar PDF content would be here"
-  },
-  "profit-loss-template": {
-    filename: "Profit-Loss-Statement-Template.xlsx",
-    contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    content: "P&L template content would be here"
-  },
-  "expense-tracker": {
-    filename: "Business-Expense-Tracker.xlsx",
-    contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    content: "Expense tracker content would be here"
-  },
-  "financial-ratios-guide": {
-    filename: "Financial-Ratios-Analysis-Guide.pdf",
-    contentType: "application/pdf",
-    content: "Financial ratios guide PDF content would be here"
-  }
-};
+function getExtension(fileType: string): string {
+    if (fileType.includes("CSV")) {
+        return "csv";
+    }
+    if (fileType.includes("PDF")) {
+        return "pdf";
+    }
+    if (fileType.includes("Excel")) {
+        return "xlsx";
+    }
+    return "txt";
+}
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { toolkitId: string } }
 ) {
   const { toolkitId } = params;
-  const file = toolkitFiles[toolkitId];
+  const toolkitItem = toolkitItems.find(item => item.id === toolkitId);
 
-  if (!file) {
+  if (!toolkitItem) {
     return NextResponse.json(
       { message: "Toolkit not found" },
       { status: 404 }
     );
   }
 
-  const content = `This would be the actual ${file.filename} file content.
+  const extension = getExtension(toolkitItem.fileType);
+  const filename = `${toolkitItem.title.replace(/\s+/g, '-')}.${extension}`;
+  const contentType = getContentType(toolkitItem.fileType);
 
-In a real implementation, this endpoint would:
-1. Serve actual Excel/PDF files from a secure storage location
-2. Track download analytics
-3. Require authentication or email verification
-4. Generate personalized files with company branding
-
-File: ${file.filename}
-Type: ${file.contentType}
-Toolkit ID: ${toolkitId}
-
-This is a demonstration of the download functionality for TaxNBooks Financial Planning Toolkit.`;
+  const content = `This would be the actual ${filename} file content.\n
+In a real implementation, this endpoint would:\n1. Serve actual ${extension.toUpperCase()} files from a secure storage location\n2. Track download analytics\n3. Require authentication or email verification\n4. Generate personalized files with company branding\n\nFile: ${filename}\nType: ${contentType}\nToolkit ID: ${toolkitId}\n\nThis is a demonstration of the download functionality for Balance Book Financial Planning Toolkit.`
 
   return new NextResponse(content, {
     headers: {
-      "Content-Disposition": `attachment; filename="${file.filename}"`,
-      "Content-Type": file.contentType,
+      "Content-Disposition": `attachment; filename="${filename}"`,
+      "Content-Type": contentType,
     },
   });
 }
