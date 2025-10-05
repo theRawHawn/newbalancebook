@@ -131,7 +131,7 @@ export default function PricingSection() {
 
         <div className="text-center mt-12">
           <h3 className="text-2xl font-bold text-primary-600 mb-3">Not an Ideal Pricing?</h3>
-          <p className="text-gray-600 mb-6">Need a custom solution? Let's discuss your specific requirements.</p>
+          <p className="text-gray-600 mb-6">Need a custom solution? Let&apos;s discuss your specific requirements.</p>
           <Button
             onClick={scrollToContact}
             className="bg-primary-600 text-white hover:bg-primary-700"

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LanguageSelector from "@/components/language-selector";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,8 +23,8 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <img src="/brandlogo.png"
-              alt="Balance Book" className="h-[105px] w-auto"/>
+              <Image src="/brandlogo.png"
+              alt="Balance Book" width={105} height={105} className="h-[105px] w-auto"/>
             </div>
           </div>
 
@@ -127,7 +128,7 @@ export default function Navbar() {
               onClick={() => scrollToSection('toolkit')}
               className="text-gray-700 hover:text-primary-600 block px-3 py-2 text-base font-medium w-full text-left"
             >
-              Free Tools
+              Tools
             </button>
             <button
               onClick={() => scrollToSection('contact')}

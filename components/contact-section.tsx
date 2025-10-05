@@ -1,10 +1,9 @@
 "use client"
 
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertContactSubmissionSchema, type InsertContactSubmission } from "@/db/schema";
+import { z } from "zod";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
+
+const insertContactSubmissionSchema = z.object({
+  name: z.string(),
+  mobile: z.string(),
+  email: z.string().email(),
+  businessType: z.string().optional(),
+  message: z.string().optional(),
+});
+
+type InsertContactSubmission = z.infer<typeof insertContactSubmissionSchema>;
 
 export default function ContactSection() {
   const { toast } = useToast();
@@ -41,7 +50,7 @@ export default function ContactSection() {
       });
       form.reset();
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "Error",
         description: error.message || "Failed to send message. Please try again.",
@@ -59,7 +68,7 @@ export default function ContactSection() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Get In Touch</h2>
-          <p className="text-xl text-gray-600">Ready to simplify your accounting? Let's start the conversation.</p>
+          <p className="text-xl text-gray-600">Ready to simplify your accounting? Let&apos;s start the conversation.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">

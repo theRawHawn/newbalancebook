@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { seoData } from "@/lib/seo";
 
 interface Language {
   code: string;

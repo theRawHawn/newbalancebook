@@ -1,4 +1,6 @@
 import { Handshake, TrendingUp, Clock } from "lucide-react";
+import Image from "next/image";
+
 export default function AboutSection() {
   return (
     <section className="py-20 bg-white">
@@ -14,14 +16,16 @@ export default function AboutSection() {
             </p>
             <div className="bg-primary-50 p-6 rounded-xl">
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Our Mission</h3>
-              <p className="text-gray-700 italic">"Making compliance stress-free, affordable, and professional for every business"</p>
+              <p className="text-gray-700 italic">Making compliance stress-free, affordable, and professional for every business</p>
             </div>
           </div>
           <div className="lg:pl-8">
-            <img
+            <Image
               src="/file_000.png"
               alt="Professional accounting and financial analysis with charts, calculator, and money"
               className="rounded-xl shadow-lg w-full h-auto"
+              width={800}
+              height={600}
             />
           </div>
         </div>

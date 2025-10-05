@@ -1,19 +1,58 @@
+
 import { NextResponse } from "next/server";
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
-import { contactSubmissions } from "@/db/schema";
+import { google } from "googleapis";
 
-const sql = neon(process.env.DATABASE_URL!);
-const db = drizzle(sql);
-
-export async function GET() {
+export async function POST(request: Request) {
   try {
-    const submissions = await db.select().from(contactSubmissions);
-    return NextResponse.json(submissions);
+    const body = await request.json();
+    const { name, email, phone, businessName, service, message } = body;
+
+    const auth = new google.auth.GoogleAuth({
+      credentials: {
+        client_email: process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_SHEETS_PRIVATE_KEY?.replace(/\n/g, '\n'),
+      },
+      scopes: [
+        'https://www.googleapis.com/auth/spreadsheets',
+      ],
+    });
+
+    const sheets = google.sheets({
+      auth,
+      version: 'v4',
+    });
+
+    const response = await sheets.spreadsheets.values.append({
+      spreadsheetId: process.env.GOOGLE_SHEETS_SHEET_ID,
+      range: 'A1:H1', 
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        values: [
+          [
+            new Date().toISOString(),
+            name,
+            email,
+            phone,
+            businessName,
+            service,
+            message,
+          ],
+        ],
+      },
+    });
+
+    return NextResponse.json({
+      message: "Form submission successful",
+      data: response.data,
+    });
+
   } catch (error) {
-    console.error("Failed to fetch contact submissions:", error);
+    console.error("Failed to process form submission:", error);
+    
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+
     return NextResponse.json(
-      { message: "Failed to fetch contact submissions" },
+      { message: "Failed to submit form", error: errorMessage },
       { status: 500 }
     );
   }

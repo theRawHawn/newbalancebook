@@ -11,10 +11,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -157,12 +155,12 @@ export default function FinancialToolkit() {
 
       toast({
         title: "Download Started",
-        description: `${selectedToolkit?.title} is now downloading. We've also added you to our newsletter for exclusive financial tips.`,
+        description: `We've also added you to our newsletter for exclusive financial tips.`,
       });
 
       setIsDialogOpen(false);
       form.reset();
-    } catch (error) {
+    } catch {
       toast({
         title: "Download Failed",
         description: "Something went wrong. Please try again or contact our support team.",
@@ -170,8 +168,6 @@ export default function FinancialToolkit() {
       });
     }
   };
-
-  const categories = Array.from(new Set(toolkitItems.map(item => item.category)));
 
   return (
     <section className="py-20 bg-gray-50">
@@ -252,7 +248,7 @@ export default function FinancialToolkit() {
             <DialogTitle>Download {selectedToolkit?.title}</DialogTitle>
             <DialogDescription>
               Please provide your details to download this free resource.
-              We'll also send you exclusive financial tips for your business.
+              We&apos;ll also send you exclusive financial tips for your business.
             </DialogDescription>
           </DialogHeader>
 
